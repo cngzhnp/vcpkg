@@ -7,6 +7,8 @@
 #include <vcpkg/install.h>
 #include <vcpkg/tools.h>
 
+#include <regex>
+
 namespace vcpkg::Export::IFW
 {
     using Dependencies::ExportPlanAction;
@@ -21,13 +23,13 @@ namespace vcpkg::Export::IFW
 
             // Format is: YYYY-mm-dd
             // 10 characters + 1 null terminating character will be written for a total of 11 chars
-            char mbstr[11];
-            const size_t bytes_written = std::strftime(mbstr, sizeof(mbstr), "%Y-%m-%d", &date_time);
+            std::array<char, 11> mbstr;
+            const size_t bytes_written = std::strftime(mbstr.data(), sizeof(mbstr), "%Y-%m-%d", &date_time);
             Checks::check_exit(VCPKG_LINE_INFO,
                                bytes_written == 10,
                                "Expected 10 bytes to be written, but %u were written",
                                bytes_written);
-            const std::string date_time_as_string(mbstr);
+            std::string date_time_as_string(mbstr.data());
             return date_time_as_string;
         }
 
@@ -124,7 +126,7 @@ namespace vcpkg::Export::IFW
         }
 
         void export_unique_packages(const fs::path& raw_exported_dir_path,
-                                    std::map<std::string, const ExportPlanAction*> unique_packages,
+                                    const std::map<std::string, const ExportPlanAction*>& unique_packages,
                                     Files::Filesystem& fs)
         {
             std::error_code ec;
@@ -183,7 +185,7 @@ namespace vcpkg::Export::IFW
         }
 
         void export_unique_triplets(const fs::path& raw_exported_dir_path,
-                                    std::set<std::string> unique_triplets,
+                                    const std::set<std::string>& unique_triplets,
                                     Files::Filesystem& fs)
         {
             std::error_code ec;

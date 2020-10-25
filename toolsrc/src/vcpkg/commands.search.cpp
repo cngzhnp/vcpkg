@@ -18,7 +18,7 @@ namespace vcpkg::Commands::Search
     static constexpr StringLiteral OPTION_FULLDESC = "x-full-desc"; // TODO: This should find a better home, eventually
     static constexpr StringLiteral OPTION_JSON = "x-json";
 
-    static void do_print_json(std::vector<const vcpkg::SourceControlFile*> source_control_files)
+    static void do_print_json(const std::vector<const vcpkg::SourceControlFile*>& source_control_files)
     {
         Json::Object obj;
         for (const SourceControlFile* scf : source_control_files)

@@ -7,7 +7,7 @@
 #include <string.h>
 
 #if !defined(VCPKG_USE_STD_FILESYSTEM)
-#error The build system must set VCPKG_USE_STD_FILESYSTEM.
+//#error The build system must set VCPKG_USE_STD_FILESYSTEM.
 #endif // !defined(VCPKG_USE_STD_FILESYSTEM)
 
 #if VCPKG_USE_STD_FILESYSTEM

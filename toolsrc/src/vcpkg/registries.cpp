@@ -9,12 +9,12 @@ namespace
 {
     struct BuiltinRegistry final : vcpkg::RegistryImpl
     {
-        virtual fs::path get_registry_root(const vcpkg::VcpkgPaths& paths) const override { return paths.ports; }
+        fs::path get_registry_root(const vcpkg::VcpkgPaths& paths) const override { return paths.ports; }
     };
 
     struct DirectoryRegistry final : vcpkg::RegistryImpl
     {
-        virtual fs::path get_registry_root(const vcpkg::VcpkgPaths& paths) const override
+        fs::path get_registry_root(const vcpkg::VcpkgPaths& paths) const override
         {
             return vcpkg::Files::combine(paths.config_root_dir, path);
         }

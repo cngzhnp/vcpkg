@@ -20,7 +20,7 @@ namespace vcpkg
     bool operator!=(const VersionT& left, const VersionT& right) { return !(left == right); }
 
     VersionDiff::VersionDiff() noexcept : left(), right() { }
-    VersionDiff::VersionDiff(const VersionT& left, const VersionT& right) : left(left), right(right) { }
+    VersionDiff::VersionDiff(VersionT&& left, VersionT&& right) : left(std::move(left)), right(std::move(right)) { }
 
     std::string VersionDiff::to_string() const
     {

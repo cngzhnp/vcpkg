@@ -21,6 +21,8 @@
 #include <vcpkg/vcpkgcmdarguments.h>
 #include <vcpkg/vcpkglib.h>
 
+#include <random>
+
 using namespace vcpkg;
 
 namespace
@@ -35,9 +37,9 @@ namespace
         fs::path base_path;
 
     public:
-        CiBuildLogsRecorder(const fs::path& base_path_) : base_path(base_path_) { }
+        CiBuildLogsRecorder(fs::path&& base_path_) : base_path(std::move(base_path_)) { }
 
-        virtual void record_build_result(const VcpkgPaths& paths,
+        void record_build_result(const VcpkgPaths& paths,
                                          const PackageSpec& spec,
                                          BuildResult result) const override
         {
@@ -486,7 +488,7 @@ namespace vcpkg::Commands::CI
 
             struct RandomizerInstance : Graphs::Randomizer
             {
-                virtual int random(int i) override
+                int random(int i) override
                 {
                     if (i <= 1) return 0;
                     std::uniform_int_distribution<int> d(0, i - 1);

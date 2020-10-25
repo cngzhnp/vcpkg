@@ -134,7 +134,7 @@ namespace vcpkg
                            ": Manifest files must have a top-level object\n");
             Checks::exit_fail(VCPKG_LINE_INFO);
         }
-        return {std::move(manifest_value.first.object()), std::move(manifest_value.second)};
+        return {std::move(manifest_value.first.object()), manifest_value.second};
     }
 
     struct ConfigAndPath

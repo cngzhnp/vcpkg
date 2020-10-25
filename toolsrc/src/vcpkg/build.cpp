@@ -28,6 +28,8 @@
 #include <vcpkg/tools.h>
 #include <vcpkg/vcpkglib.h>
 
+#include <fstream>
+
 using namespace vcpkg;
 using vcpkg::Build::BuildResult;
 using vcpkg::Parse::ParseControlErrorInfo;
@@ -802,7 +804,7 @@ namespace vcpkg::Build
                                                                             triplet,
                                                                             build_info,
                                                                             action.public_abi(),
-                                                                            std::move(find_itr->second));
+                                                                            find_itr->second);
 
         if (error_count != 0)
         {
@@ -818,7 +820,7 @@ namespace vcpkg::Build
                     Checks::check_exit(VCPKG_LINE_INFO, find_itr != action.feature_dependencies.end());
 
                     bcf->features.emplace_back(
-                        *scfl.source_control_file->core_paragraph, *f_pgh, triplet, std::move(find_itr->second));
+                        *scfl.source_control_file->core_paragraph, *f_pgh, triplet, find_itr->second);
                 }
             }
         }

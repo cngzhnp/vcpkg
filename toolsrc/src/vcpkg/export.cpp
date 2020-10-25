@@ -110,13 +110,13 @@ namespace vcpkg::Export
 
         // Format is: YYYYmmdd-HHMMSS
         // 15 characters + 1 null terminating character will be written for a total of 16 chars
-        char mbstr[16];
-        const size_t bytes_written = std::strftime(mbstr, sizeof(mbstr), "%Y%m%d-%H%M%S", &date_time);
+        std::array<char, 16> mbstr;
+        const size_t bytes_written = std::strftime(mbstr.data(), sizeof(mbstr), "%Y%m%d-%H%M%S", &date_time);
         Checks::check_exit(VCPKG_LINE_INFO,
                            bytes_written == 15,
                            "Expected 15 bytes to be written, but %u were written",
                            bytes_written);
-        const std::string date_time_as_string(mbstr);
+        const std::string date_time_as_string(mbstr.data());
         return ("vcpkg-export-" + date_time_as_string);
     }
 
@@ -165,8 +165,7 @@ namespace vcpkg::Export
             System::cmd_execute_and_capture_output(cmd.extract(), System::get_clean_environment()).exit_code;
         Checks::check_exit(VCPKG_LINE_INFO, exit_code == 0, "Error: NuGet package creation failed");
 
-        const fs::path output_path = output_dir / (nuget_id + "." + nuget_version + ".nupkg");
-        return output_path;
+        return output_dir / (nuget_id + "." + nuget_version + ".nupkg");
     }
 
     struct ArchiveFormat final
@@ -210,7 +209,7 @@ namespace vcpkg::Export
         const std::string exported_dir_filename = fs::u8string(raw_exported_dir.filename());
         const std::string exported_archive_filename =
             Strings::format("%s.%s", exported_dir_filename, format.extension());
-        const fs::path exported_archive_path = (output_dir / exported_archive_filename);
+        fs::path exported_archive_path = (output_dir / exported_archive_filename);
 
         System::CmdLineBuilder cmd;
         cmd.string_arg("cd").path_arg(raw_exported_dir.parent_path());

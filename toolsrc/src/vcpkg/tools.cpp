@@ -12,6 +12,8 @@
 #include <vcpkg/tools.h>
 #include <vcpkg/vcpkgpaths.h>
 
+#include <regex>
+
 namespace vcpkg
 {
     struct ToolData
@@ -266,11 +268,11 @@ namespace vcpkg
     {
         std::string m_exe = "cmake";
 
-        virtual const std::string& tool_data_name() const override { return m_exe; }
-        virtual const std::string& exe_stem() const override { return m_exe; }
-        virtual std::array<int, 3> default_min_version() const override { return {3, 17, 1}; }
+        const std::string& tool_data_name() const override { return m_exe; }
+        const std::string& exe_stem() const override { return m_exe; }
+        std::array<int, 3> default_min_version() const override { return {3, 17, 1}; }
 
-        virtual void add_special_paths(std::vector<fs::path>& out_candidate_paths) const override
+        void add_special_paths(std::vector<fs::path>& out_candidate_paths) const override
         {
 #if defined(_WIN32)
             const auto& program_files = System::get_program_files_platform_bitness();
@@ -283,7 +285,7 @@ namespace vcpkg
             (void)out_candidate_paths;
 #endif
         }
-        virtual Optional<std::string> get_version(const VcpkgPaths&, const fs::path& path_to_exe) const override
+        Optional<std::string> get_version(const VcpkgPaths&, const fs::path& path_to_exe) const override
         {
             const std::string cmd = Strings::format(R"("%s" --version)", fs::u8string(path_to_exe));
             const auto rc = System::cmd_execute_and_capture_output(cmd);
@@ -305,11 +307,11 @@ CMake suite maintained and supported by Kitware (kitware.com/cmake).
     {
         std::string m_exe = "ninja";
 
-        virtual const std::string& tool_data_name() const override { return m_exe; }
-        virtual const std::string& exe_stem() const override { return m_exe; }
-        virtual std::array<int, 3> default_min_version() const override { return {3, 5, 1}; }
+        const std::string& tool_data_name() const override { return m_exe; }
+        const std::string& exe_stem() const override { return m_exe; }
+        std::array<int, 3> default_min_version() const override { return {3, 5, 1}; }
 
-        virtual Optional<std::string> get_version(const VcpkgPaths&, const fs::path& path_to_exe) const override
+        Optional<std::string> get_version(const VcpkgPaths&, const fs::path& path_to_exe) const override
         {
             const std::string cmd = Strings::format(R"("%s" --version)", fs::u8string(path_to_exe));
             const auto rc = System::cmd_execute_and_capture_output(cmd);
@@ -329,11 +331,11 @@ CMake suite maintained and supported by Kitware (kitware.com/cmake).
     {
         std::string m_exe = "nuget";
 
-        virtual const std::string& tool_data_name() const override { return m_exe; }
-        virtual const std::string& exe_stem() const override { return m_exe; }
-        virtual std::array<int, 3> default_min_version() const override { return {4, 6, 2}; }
+        const std::string& tool_data_name() const override { return m_exe; }
+        const std::string& exe_stem() const override { return m_exe; }
+        std::array<int, 3> default_min_version() const override { return {4, 6, 2}; }
 
-        virtual Optional<std::string> get_version(const VcpkgPaths& paths, const fs::path& path_to_exe) const override
+        Optional<std::string> get_version(const VcpkgPaths& paths, const fs::path& path_to_exe) const override
         {
             System::CmdLineBuilder cmd;
 #ifndef _WIN32
@@ -363,11 +365,11 @@ Type 'NuGet help <command>' for help on a specific command.
     {
         std::string m_exe = "git";
 
-        virtual const std::string& tool_data_name() const override { return m_exe; }
-        virtual const std::string& exe_stem() const override { return m_exe; }
-        virtual std::array<int, 3> default_min_version() const override { return {2, 7, 4}; }
+        const std::string& tool_data_name() const override { return m_exe; }
+        const std::string& exe_stem() const override { return m_exe; }
+        std::array<int, 3> default_min_version() const override { return {2, 7, 4}; }
 
-        virtual void add_special_paths(std::vector<fs::path>& out_candidate_paths) const override
+        void add_special_paths(std::vector<fs::path>& out_candidate_paths) const override
         {
 #if defined(_WIN32)
             const auto& program_files = System::get_program_files_platform_bitness();
@@ -381,7 +383,7 @@ Type 'NuGet help <command>' for help on a specific command.
 #endif
         }
 
-        virtual Optional<std::string> get_version(const VcpkgPaths&, const fs::path& path_to_exe) const override
+        Optional<std::string> get_version(const VcpkgPaths&, const fs::path& path_to_exe) const override
         {
             const std::string cmd = Strings::format(R"("%s" --version)", fs::u8string(path_to_exe));
             const auto rc = System::cmd_execute_and_capture_output(cmd);
@@ -404,11 +406,11 @@ git version 2.17.1.windows.2
     {
         std::string m_exe = "mono";
 
-        virtual const std::string& tool_data_name() const override { return m_exe; }
-        virtual const std::string& exe_stem() const override { return m_exe; }
-        virtual std::array<int, 3> default_min_version() const override { return {0, 0, 0}; }
+        const std::string& tool_data_name() const override { return m_exe; }
+        const std::string& exe_stem() const override { return m_exe; }
+        std::array<int, 3> default_min_version() const override { return {0, 0, 0}; }
 
-        virtual Optional<std::string> get_version(const VcpkgPaths&, const fs::path& path_to_exe) const override
+        Optional<std::string> get_version(const VcpkgPaths&, const fs::path& path_to_exe) const override
         {
             const auto rc = System::cmd_execute_and_capture_output(
                 System::CmdLineBuilder().path_arg(path_to_exe).string_arg("--version").extract());
@@ -432,11 +434,11 @@ Mono JIT compiler version 6.8.0.105 (Debian 6.8.0.105+dfsg-2 Wed Feb 26 23:23:50
         std::string m_exe;
         std::string m_toolname = "installerbase";
 
-        virtual const std::string& tool_data_name() const override { return m_toolname; }
-        virtual const std::string& exe_stem() const override { return m_exe; }
-        virtual std::array<int, 3> default_min_version() const override { return {0, 0, 0}; }
+        const std::string& tool_data_name() const override { return m_toolname; }
+        const std::string& exe_stem() const override { return m_exe; }
+        std::array<int, 3> default_min_version() const override { return {0, 0, 0}; }
 
-        virtual void add_special_paths(std::vector<fs::path>& out_candidate_paths) const override
+        void add_special_paths(std::vector<fs::path>& out_candidate_paths) const override
         {
             (void)out_candidate_paths;
             // TODO: Uncomment later
@@ -448,7 +450,7 @@ Mono JIT compiler version 6.8.0.105 (Debian 6.8.0.105+dfsg-2 Wed Feb 26 23:23:50
             // "Qt" / "QtIFW-3.1.0" / "bin" / "installerbase.exe");
         }
 
-        virtual Optional<std::string> get_version(const VcpkgPaths&, const fs::path& path_to_exe) const override
+        Optional<std::string> get_version(const VcpkgPaths&, const fs::path& path_to_exe) const override
         {
             const std::string cmd = Strings::format(R"("%s" --framework-version)", fs::u8string(path_to_exe));
             const auto rc = System::cmd_execute_and_capture_output(cmd);
@@ -469,7 +471,7 @@ Mono JIT compiler version 6.8.0.105 (Debian 6.8.0.105+dfsg-2 Wed Feb 26 23:23:50
         vcpkg::Cache<std::string, fs::path> path_only_cache;
         vcpkg::Cache<std::string, PathAndVersion> path_version_cache;
 
-        virtual const fs::path& get_tool_path(const VcpkgPaths& paths, const std::string& tool) const override
+        const fs::path& get_tool_path(const VcpkgPaths& paths, const std::string& tool) const override
         {
             return path_only_cache.get_lazy(tool, [&]() {
                 if (tool == Tools::IFW_BINARYCREATOR)
@@ -530,7 +532,7 @@ Mono JIT compiler version 6.8.0.105 (Debian 6.8.0.105+dfsg-2 Wed Feb 26 23:23:50
             });
         }
 
-        virtual const std::string& get_tool_version(const VcpkgPaths& paths, const std::string& tool) const override
+        const std::string& get_tool_version(const VcpkgPaths& paths, const std::string& tool) const override
         {
             return get_tool_pathversion(paths, tool).version;
         }

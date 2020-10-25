@@ -9,7 +9,7 @@
 #include <vcpkg/vcpkgcmdarguments.h>
 #include <vcpkg/vcpkgpaths.h>
 
-#include <limits.h>
+#include <climits>
 
 #if defined(_WIN32)
 namespace
@@ -179,23 +179,23 @@ namespace vcpkg::Commands::Edit
         const auto& program_files = System::get_program_files_platform_bitness();
         if (const fs::path* pf = program_files.get())
         {
-            candidate_paths.push_back(*pf / VS_CODE_INSIDERS);
-            candidate_paths.push_back(*pf / VS_CODE);
+            candidate_paths.emplace_back(*pf / VS_CODE_INSIDERS);
+            candidate_paths.emplace_back(*pf / VS_CODE);
         }
 
         const auto& program_files_32_bit = System::get_program_files_32_bit();
         if (const fs::path* pf = program_files_32_bit.get())
         {
-            candidate_paths.push_back(*pf / VS_CODE_INSIDERS);
-            candidate_paths.push_back(*pf / VS_CODE);
+            candidate_paths.emplace_back(*pf / VS_CODE_INSIDERS);
+            candidate_paths.emplace_back(*pf / VS_CODE);
         }
 
         const auto& app_data = System::get_environment_variable("APPDATA");
         if (const auto* ad = app_data.get())
         {
             const fs::path default_base = fs::path{*ad}.parent_path() / "Local" / "Programs";
-            candidate_paths.push_back(default_base / VS_CODE_INSIDERS);
-            candidate_paths.push_back(default_base / VS_CODE);
+            candidate_paths.emplace_back(default_base / VS_CODE_INSIDERS);
+            candidate_paths.emplace_back(default_base / VS_CODE);
         }
 
         const std::vector<fs::path> from_registry = find_from_registry();
@@ -209,15 +209,15 @@ namespace vcpkg::Commands::Edit
             const auto last = full_path.end();
             first = std::find_if_not(first, last, [](const char c) { return c == '@'; });
             const auto comma = std::find(first, last, ',');
-            candidate_paths.push_back(fs::u8path(first, comma));
+            candidate_paths.emplace_back(fs::u8path(first, comma));
         }
 #elif defined(__APPLE__)
-        candidate_paths.push_back(
+        candidate_paths.emplace_back(
             fs::path{"/Applications/Visual Studio Code - Insiders.app/Contents/Resources/app/bin/code"});
-        candidate_paths.push_back(fs::path{"/Applications/Visual Studio Code.app/Contents/Resources/app/bin/code"});
+        candidate_paths.emplace_back(fs::path{"/Applications/Visual Studio Code.app/Contents/Resources/app/bin/code"});
 #elif defined(__linux__)
-        candidate_paths.push_back(fs::path{"/usr/share/code/bin/code"});
-        candidate_paths.push_back(fs::path{"/usr/bin/code"});
+        candidate_paths.emplace_back(fs::path{"/usr/share/code/bin/code"});
+        candidate_paths.emplace_back(fs::path{"/usr/bin/code"});
 
         if (System::cmd_execute("command -v xdg-mime") == 0)
         {
@@ -233,7 +233,7 @@ namespace vcpkg::Commands::Edit
                     execute_result.output.erase(
                         std::remove(std::begin(execute_result.output), std::end(execute_result.output), '\n'),
                         std::end(execute_result.output));
-                    candidate_paths.push_back(fs::path{execute_result.output});
+                    candidate_paths.emplace_back(fs::path{execute_result.output});
                 }
             }
         }

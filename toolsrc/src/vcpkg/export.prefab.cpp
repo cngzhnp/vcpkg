@@ -11,6 +11,8 @@
 #include <vcpkg/install.h>
 #include <vcpkg/tools.h>
 
+#include <regex>
+
 namespace vcpkg::Export::Prefab
 {
     using Dependencies::ExportPlanAction;
@@ -59,6 +61,7 @@ namespace vcpkg::Export::Prefab
     static std::string jsonify(const std::vector<std::string>& dependencies)
     {
         std::vector<std::string> deps;
+        deps.reserve(dependencies.size());
         for (const auto& dep : dependencies)
         {
             deps.push_back("\"" + dep + "\"");
@@ -181,7 +184,7 @@ namespace vcpkg::Export::Prefab
         size_t next = 0;
         std::vector<int> fragments(0);
 
-        while ((next = version.find(".", last)) != std::string::npos)
+        while ((next = version.find('.', last)) != std::string::npos)
         {
             fragments.push_back(std::stoi(version.substr(last, next - last)));
             last = next + 1;
@@ -382,13 +385,13 @@ namespace vcpkg::Export::Prefab
             if (is_empty_package)
             {
                 empty_package_dependencies[name] = std::set<PackageSpec>();
-                for (auto dependency : dependencies)
+                for (const auto& dependency : dependencies)
                 {
                     if (empty_package_dependencies.find(dependency.name()) != empty_package_dependencies.end())
                     {
                         auto& child_deps = empty_package_dependencies[name];
                         auto& parent_deps = empty_package_dependencies[dependency.name()];
-                        for (auto parent_dep : parent_deps)
+                        for (const auto& parent_dep : parent_deps)
                         {
                             child_deps.insert(parent_dep);
                         }
@@ -452,7 +455,7 @@ namespace vcpkg::Export::Prefab
 
             std::set<PackageSpec> dependencies_minus_empty_packages;
 
-            for (auto dependency : dependencies)
+            for (const auto& dependency : dependencies)
             {
                 if (empty_package_dependencies.find(dependency.name()) != empty_package_dependencies.end())
                 {
@@ -471,7 +474,7 @@ namespace vcpkg::Export::Prefab
 
             if (dependencies_minus_empty_packages.size() > 0)
             {
-                pom_dependencies.push_back("\n<dependencies>");
+                pom_dependencies.emplace_back("\n<dependencies>");
             }
 
             for (const auto& it : dependencies_minus_empty_packages)
@@ -492,7 +495,7 @@ namespace vcpkg::Export::Prefab
 
             if (dependencies_minus_empty_packages.size() > 0)
             {
-                pom_dependencies.push_back("</dependencies>\n");
+                pom_dependencies.emplace_back("</dependencies>\n");
             }
 
             if (prefab_options.enable_debug)
@@ -508,7 +511,7 @@ namespace vcpkg::Export::Prefab
 
             if (prefab_options.enable_debug)
             {
-                std::vector<std::string> triplet_names;
+                std::vector<std::string> triplet_names(triplets.size());
                 for (auto triplet : triplets)
                 {
                     triplet_names.push_back(triplet.canonical_name());
@@ -532,9 +535,9 @@ namespace vcpkg::Export::Prefab
 
                 fs::path libs = installed_dir / fs::u8path("lib");
 
-                std::vector<fs::path> modules;
-
                 std::vector<fs::path> modules_shared = find_modules(paths, libs, ".so");
+
+                std::vector<fs::path> modules(modules_shared.size());
 
                 for (const auto& module : modules_shared)
                 {

@@ -11,6 +11,8 @@
 #include <vcpkg/vcpkgcmdarguments.h>
 #include <vcpkg/vcpkglib.h>
 
+#include <regex>
+
 namespace vcpkg::Commands::Autocomplete
 {
     [[noreturn]] static void output_sorted_results_and_exit(const LineInfo& line_info,

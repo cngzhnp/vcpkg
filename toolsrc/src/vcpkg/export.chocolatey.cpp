@@ -182,7 +182,7 @@ if (Test-Path $installedDir)
             // normalize the version string to be separated by dots to be compliant with Nusepc.
             norm_version = Strings::replace_all(std::move(norm_version), "-", ".");
             norm_version = Strings::replace_all(std::move(norm_version), "_", ".");
-            norm_version = norm_version + chocolatey_options.maybe_version_suffix.value_or("");
+            norm_version += chocolatey_options.maybe_version_suffix.value_or("");
             packages_version.insert(std::make_pair(binary_paragraph.spec.name(), norm_version));
         }
 

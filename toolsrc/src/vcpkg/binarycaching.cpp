@@ -12,6 +12,8 @@
 #include <vcpkg/metrics.h>
 #include <vcpkg/tools.h>
 
+#include <regex>
+
 using namespace vcpkg;
 
 namespace
@@ -768,7 +770,7 @@ namespace
                         else
                             Checks::unreachable(VCPKG_LINE_INFO);
                     }
-                    segments.emplace_back(std::move(loc), std::move(segment));
+                    segments.emplace_back(loc, std::move(segment));
 
                     auto ch = cur();
                     if (ch == Unicode::end_of_file || ch == ';')
@@ -1011,7 +1013,7 @@ details::NuGetRepoInfo details::get_nuget_repo_info_from_env()
 std::string vcpkg::generate_nuspec(const VcpkgPaths& paths,
                                    const Dependencies::InstallPlanAction& action,
                                    const vcpkg::NugetReference& ref,
-                                   details::NuGetRepoInfo rinfo)
+                                   const details::NuGetRepoInfo& rinfo)
 {
     auto& spec = action.spec;
     auto& scf = *action.source_control_file_location.value_or_exit(VCPKG_LINE_INFO).source_control_file;

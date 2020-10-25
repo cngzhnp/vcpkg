@@ -9,6 +9,9 @@
 #include <vcpkg/commands.version.h>
 #include <vcpkg/metrics.h>
 
+#include <random>
+#include <iostream>
+
 #if defined(_WIN32)
 #pragma comment(lib, "version")
 #pragma comment(lib, "winhttp")
@@ -31,21 +34,21 @@ namespace vcpkg::Metrics
 
     struct append_hexits
     {
-        constexpr static char hex[17] = "0123456789abcdef";
+        constexpr static std::array<char, 17> hex {"0123456789abcdef"};
         void operator()(std::string& res, std::uint8_t bits) const
         {
             res.push_back(hex[(bits >> 4) & 0x0F]);
             res.push_back(hex[(bits >> 0) & 0x0F]);
         }
     };
-    constexpr char append_hexits::hex[17];
+    constexpr std::array<char, 17> append_hexits::hex;
 
     // note: this ignores the bits of these numbers that would be where format and variant go
     static std::string uuid_of_integers(uint64_t top, uint64_t bottom)
     {
         // uuid_field_size in bytes, not hex characters
-        constexpr size_t uuid_top_field_size[] = {4, 2, 2};
-        constexpr size_t uuid_bottom_field_size[] = {2, 6};
+        constexpr std::array<size_t, 3> uuid_top_field_size {4, 2, 2};
+        constexpr std::array<size_t, 2> uuid_bottom_field_size = {2, 6};
 
         // uuid_field_size in hex characters, not bytes
         constexpr size_t uuid_size = 8 + 1 + 4 + 1 + 4 + 1 + 4 + 1 + 12;

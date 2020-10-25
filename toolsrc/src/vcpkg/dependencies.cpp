@@ -53,7 +53,7 @@ namespace vcpkg::Dependencies
             {
             }
 
-            Cluster(const PackageSpec& spec, const SourceControlFileLocation& scfl) : m_spec(spec), m_scfl(scfl) { }
+            Cluster(PackageSpec&& spec, const SourceControlFileLocation& scfl) : m_spec(std::move(spec)), m_scfl(scfl) { }
 
             bool has_feature_installed(const std::string& feature) const
             {
@@ -448,10 +448,10 @@ namespace vcpkg::Dependencies
     {
     }
 
-    RemovePlanAction::RemovePlanAction(const PackageSpec& spec,
+    RemovePlanAction::RemovePlanAction(PackageSpec&& spec,
                                        const RemovePlanType& plan_type,
                                        const RequestType& request_type)
-        : spec(spec), plan_type(plan_type), request_type(request_type)
+        : spec(std::move(spec)), plan_type(plan_type), request_type(request_type)
     {
     }
 
@@ -465,18 +465,18 @@ namespace vcpkg::Dependencies
     {
     }
 
-    ExportPlanAction::ExportPlanAction(const PackageSpec& spec,
+    ExportPlanAction::ExportPlanAction(PackageSpec&& spec,
                                        InstalledPackageView&& installed_package,
                                        const RequestType& request_type)
-        : spec(spec)
+        : spec(std::move(spec))
         , plan_type(ExportPlanType::ALREADY_BUILT)
         , request_type(request_type)
         , m_installed_package(std::move(installed_package))
     {
     }
 
-    ExportPlanAction::ExportPlanAction(const PackageSpec& spec, const RequestType& request_type)
-        : spec(spec), plan_type(ExportPlanType::NOT_BUILT), request_type(request_type)
+    ExportPlanAction::ExportPlanAction(PackageSpec&& spec, const RequestType& request_type)
+        : spec(std::move(spec)), plan_type(ExportPlanType::NOT_BUILT), request_type(request_type)
     {
     }
 
@@ -558,7 +558,7 @@ namespace vcpkg::Dependencies
         auto installed_ports = get_installed_ports(status_db);
         const std::unordered_set<PackageSpec> specs_as_set(specs.cbegin(), specs.cend());
         return Graphs::topological_sort(
-            std::move(specs), RemoveAdjacencyProvider{status_db, installed_ports, specs_as_set}, {});
+            specs, RemoveAdjacencyProvider{status_db, installed_ports, specs_as_set}, {});
     }
 
     std::vector<ExportPlanAction> create_export_plan(const std::vector<PackageSpec>& specs,
@@ -1115,7 +1115,7 @@ namespace vcpkg::Dependencies
         if (!remove_specs.empty())
         {
             std::string msg = "The following packages will be removed:\n";
-            for (auto spec : remove_specs)
+            for (const auto& spec : remove_specs)
             {
                 Strings::append(msg, to_output_string(RequestType::USER_REQUESTED, spec.to_string()), '\n');
             }

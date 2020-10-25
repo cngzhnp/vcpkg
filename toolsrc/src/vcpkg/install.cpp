@@ -17,6 +17,8 @@
 #include <vcpkg/remove.h>
 #include <vcpkg/vcpkglib.h>
 
+#include <regex>
+
 namespace vcpkg::Install
 {
     using namespace vcpkg;
@@ -810,7 +812,7 @@ namespace vcpkg::Install
             if (core_it == features.end())
             {
                 if (!Util::Sets::contains(options.switches, OPTION_MANIFEST_NO_DEFAULT_FEATURES))
-                    features.push_back("default");
+                    features.emplace_back("default");
             }
             else
             {
@@ -984,8 +986,8 @@ namespace vcpkg::Install
         Install::perform_and_exit(args, paths, default_triplet);
     }
 
-    SpecSummary::SpecSummary(const PackageSpec& spec, const Dependencies::InstallPlanAction* action)
-        : spec(spec), build_result{BuildResult::NULLVALUE, nullptr}, action(action)
+    SpecSummary::SpecSummary(PackageSpec&& spec, const Dependencies::InstallPlanAction* action)
+        : spec(std::move(spec)), build_result{BuildResult::NULLVALUE, nullptr}, action(action)
     {
     }
 

@@ -12,6 +12,8 @@
 #include <vcpkg/vcpkgcmdarguments.h>
 #include <vcpkg/vcpkgpaths.h>
 
+#include <regex>
+
 namespace vcpkg::Commands::Integrate
 {
 #if defined(_WIN32)

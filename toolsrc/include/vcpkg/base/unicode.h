@@ -1,6 +1,7 @@
 #pragma once
 
 #include <stddef.h>
+#include <system_error>
 
 namespace vcpkg::Unicode
 {

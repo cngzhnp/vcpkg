@@ -180,7 +180,7 @@ namespace vcpkg
                 parser.skip_tabs_spaces();
                 if (parser.cur() == '*')
                 {
-                    features.push_back("*");
+                    features.emplace_back("*");
                     parser.next();
                 }
                 else

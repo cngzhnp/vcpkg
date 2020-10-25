@@ -42,7 +42,7 @@ namespace
             return nullopt;
         }
 
-        auto parsed_json_obj = parsed_json.object();
+        const auto& parsed_json_obj = parsed_json.object();
 
         auto scf = SourceControlFile::parse_manifest_file(manifest_path, parsed_json_obj);
         if (!scf.has_value())

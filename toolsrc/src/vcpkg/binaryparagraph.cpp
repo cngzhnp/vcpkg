@@ -106,7 +106,7 @@ namespace vcpkg
 
     BinaryParagraph::BinaryParagraph(const SourceParagraph& spgh,
                                      Triplet triplet,
-                                     const std::string& abi_tag,
+                                     std::string&& abi_tag,
                                      const std::vector<FeatureSpec>& deps)
         : spec(spgh.name, triplet)
         , version(spgh.version)
@@ -116,7 +116,7 @@ namespace vcpkg
         , feature()
         , default_features(spgh.default_features)
         , dependencies()
-        , abi(abi_tag)
+        , abi(std::move(abi_tag))
         , type(spgh.type)
     {
         this->dependencies = Util::fmap(deps, [](const FeatureSpec& spec) { return spec.spec().name(); });
@@ -126,10 +126,9 @@ namespace vcpkg
     BinaryParagraph::BinaryParagraph(const SourceParagraph& spgh,
                                      const FeatureParagraph& fpgh,
                                      Triplet triplet,
-                                     const std ::vector<FeatureSpec>& deps)
+                                     const std::vector<FeatureSpec>& deps)
         : spec(spgh.name, triplet)
         , version()
-        , port_version()
         , description(fpgh.description)
         , maintainers()
         , feature(fpgh.name)

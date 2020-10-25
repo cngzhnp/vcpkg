@@ -32,8 +32,8 @@ namespace vcpkg::PostBuildLint
         std::string name;
         std::regex regex;
 
-        OutdatedDynamicCrt(const std::string& name, const std::string& regex_as_string)
-            : name(name), regex(std::regex(regex_as_string, std::regex_constants::icase))
+        OutdatedDynamicCrt(std::string&& name, const std::string& regex_as_string)
+            : name(std::move(name)), regex(std::regex(regex_as_string, std::regex_constants::icase))
         {
         }
     };
@@ -418,7 +418,7 @@ namespace vcpkg::PostBuildLint
 
     static LintStatus check_uwp_bit_of_dlls(const std::string& expected_system_name,
                                             const std::vector<fs::path>& dlls,
-                                            const fs::path dumpbin_exe)
+                                            const fs::path& dumpbin_exe)
     {
         if (expected_system_name != "WindowsStore")
         {
@@ -707,7 +707,7 @@ namespace vcpkg::PostBuildLint
 
     static LintStatus check_crt_linkage_of_libs(const BuildType& expected_build_type,
                                                 const std::vector<fs::path>& libs,
-                                                const fs::path dumpbin_exe)
+                                                const fs::path& dumpbin_exe)
     {
         std::vector<BuildType> bad_build_types(BuildTypeC::VALUES.cbegin(), BuildTypeC::VALUES.cend());
         bad_build_types.erase(std::remove(bad_build_types.begin(), bad_build_types.end(), expected_build_type),
@@ -762,7 +762,7 @@ namespace vcpkg::PostBuildLint
     };
 
     static LintStatus check_outdated_crt_linkage_of_dlls(const std::vector<fs::path>& dlls,
-                                                         const fs::path dumpbin_exe,
+                                                         const fs::path& dumpbin_exe,
                                                          const BuildInfo& build_info,
                                                          const PreBuildInfo& pre_build_info)
     {

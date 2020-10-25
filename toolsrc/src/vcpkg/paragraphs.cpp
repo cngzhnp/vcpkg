@@ -69,8 +69,8 @@ namespace vcpkg::Parse
             auto err = std::make_unique<ParseControlErrorInfo>();
             err->name = name;
             err->extra_fields["CONTROL"] = Util::extract_keys(fields);
-            err->missing_fields["CONTROL"] = std::move(missing_fields);
-            err->expected_types = std::move(expected_types);
+            err->missing_fields["CONTROL"] = missing_fields;
+            err->expected_types = expected_types;
             return err;
         }
         return nullptr;

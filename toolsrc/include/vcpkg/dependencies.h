@@ -91,7 +91,7 @@ namespace vcpkg::Dependencies
         static bool compare_by_name(const RemovePlanAction* left, const RemovePlanAction* right);
 
         RemovePlanAction() noexcept;
-        RemovePlanAction(const PackageSpec& spec, const RemovePlanType& plan_type, const RequestType& request_type);
+        RemovePlanAction(PackageSpec&& spec, const RemovePlanType& plan_type, const RequestType& request_type);
 
         PackageSpec spec;
         RemovePlanType plan_type;
@@ -120,11 +120,11 @@ namespace vcpkg::Dependencies
         static bool compare_by_name(const ExportPlanAction* left, const ExportPlanAction* right);
 
         ExportPlanAction() noexcept;
-        ExportPlanAction(const PackageSpec& spec,
+        ExportPlanAction(PackageSpec&& spec,
                          InstalledPackageView&& installed_package,
                          const RequestType& request_type);
 
-        ExportPlanAction(const PackageSpec& spec, const RequestType& request_type);
+        ExportPlanAction(PackageSpec&& spec, const RequestType& request_type);
 
         PackageSpec spec;
         ExportPlanType plan_type;

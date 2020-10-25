@@ -22,7 +22,7 @@ namespace vcpkg::Install
 
     struct SpecSummary
     {
-        SpecSummary(const PackageSpec& spec, const Dependencies::InstallPlanAction* action);
+        SpecSummary(PackageSpec&& spec, const Dependencies::InstallPlanAction* action);
 
         const BinaryParagraph* get_binary_paragraph() const;
 
